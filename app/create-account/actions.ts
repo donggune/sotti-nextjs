@@ -1,6 +1,6 @@
 "use server";
 
-import { PASSWORD_REGEX } from "@/lib/constants";
+import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
 import { z } from "zod";
 
 const checkPasswords = ({ password, passwordConfirm }: { password: string; passwordConfirm: string }) => {
