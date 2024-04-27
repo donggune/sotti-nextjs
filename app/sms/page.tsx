@@ -8,9 +8,9 @@ export default function SMSLogin() {
         <h1 className="text-2xl">SMS Login</h1>
       </div>
       <form className="flex flex-col gap-3">
-        <FormInput type="number" placeholder="휴대폰번호" required errors={[]} />
-        <FormInput type="number" placeholder="인증번호" required errors={[]} />
-        <FormButton text="인증하기" loading={false} />
+        <FormInput type="number" placeholder="휴대폰번호" required name="phoneNumber" />
+        <FormInput type="number" placeholder="인증번호" required name="smsCode" />
+        <FormButton text="인증하기" />
       </form>
     </div>
   );
