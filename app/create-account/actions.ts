@@ -1,8 +1,21 @@
 "use server";
 
 import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
+import db from "@/lib/db";
 import { z } from "zod";
 
+const checkEmail = async (email: string) => {
+  const userEmail = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return !Boolean(userEmail);
+};
 const checkPasswords = ({ password, passwordConfirm }: { password: string; passwordConfirm: string }) => {
   return password === passwordConfirm;
 };
@@ -15,7 +28,9 @@ const formSchema = z
         invalid_type_error: "이름에는 글자만 넣어주세요",
       })
       .trim(),
-    email: z.string().email("올바른 이메일을 입력해 주세요").toLowerCase(),
+    email: z.string().email("올바른 이메일을 입력해 주세요").toLowerCase().refine(checkEmail, {
+      message: "이미 가입된 이메일 주소에요",
+    }),
     password: z.string().regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     passwordConfirm: z.string(),
   })
@@ -32,9 +47,15 @@ export async function createAccount(prevState: any, formData: FormData) {
     passwordConfirm: formData.get("passwordConfirm"),
   };
 
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
 
   if (!result.success) {
     return result.error.flatten();
+  } else {
+    // 이메일 중복 확인 => Zod 에 적용
+    // 비번 해싱
+    // 저장
+    // 로그인
+    // 리다이렉트
   }
 }
