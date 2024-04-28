@@ -4,21 +4,9 @@ import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { cookies } from "next/headers";
-import { getIronSession } from "iron-session";
+import { redirect } from "next/navigation";
+import getSession from "@/lib/session";
 
-const checkEmail = async (email: string) => {
-  const userEmail = await db.user.findUnique({
-    where: {
-      email,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  return !Boolean(userEmail);
-};
 const checkPasswords = ({ password, passwordConfirm }: { password: string; passwordConfirm: string }) => {
   return password === passwordConfirm;
 };
@@ -31,11 +19,29 @@ const formSchema = z
         invalid_type_error: "이름에는 글자만 넣어주세요",
       })
       .trim(),
-    email: z.string().email("올바른 이메일을 입력해 주세요").toLowerCase().refine(checkEmail, {
-      message: "이미 가입된 이메일 주소에요",
-    }),
+    email: z.string().email("올바른 이메일을 입력해 주세요").toLowerCase(),
     password: z.string().regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     passwordConfirm: z.string(),
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const userEmail = await db.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (userEmail) {
+      ctx.addIssue({
+        code: "custom",
+        message: "이미 가입된 이메일 주소에요",
+        path: ["email"],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
   })
   .refine(checkPasswords, {
     message: "비밀번호가 일치하지 않아요",
@@ -69,14 +75,8 @@ export async function createAccount(prevState: any, formData: FormData) {
         id: true,
       },
     });
-    // 로그인 ( 로그인한다는건 사용자에게 쿠키를 보내는거와 같음 )
-    const session = await getIronSession(cookies(), {
-      cookieName: "sotti-login",
-      password: process.env.COOKIE_PASSWORD!,
-    });
-    //@ts-ignore
-    session.id = user.id;
-    await session.save();
+
     // 리다이렉트
+    redirect("/login");
   }
 }
