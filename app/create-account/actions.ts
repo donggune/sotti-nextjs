@@ -3,6 +3,7 @@
 import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
+import bcrypt from "bcrypt";
 
 const checkEmail = async (email: string) => {
   const userEmail = await db.user.findUnique({
@@ -54,7 +55,18 @@ export async function createAccount(prevState: any, formData: FormData) {
   } else {
     // 이메일 중복 확인 => Zod 에 적용
     // 비번 해싱
+    const hashedPassword = await bcrypt.hash(result.data.password, 12);
     // 저장
+    const user = await db.user.create({
+      data: {
+        name: result.data.name,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
     // 로그인
     // 리다이렉트
   }
