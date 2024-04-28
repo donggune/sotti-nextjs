@@ -4,6 +4,8 @@ import { PASSWORD_REGEX, PASSWORD_REGEX_ERROR } from "@/lib/constants";
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
+import { cookies } from "next/headers";
+import { getIronSession } from "iron-session";
 
 const checkEmail = async (email: string) => {
   const userEmail = await db.user.findUnique({
@@ -67,7 +69,14 @@ export async function createAccount(prevState: any, formData: FormData) {
         id: true,
       },
     });
-    // 로그인
+    // 로그인 ( 로그인한다는건 사용자에게 쿠키를 보내는거와 같음 )
+    const session = await getIronSession(cookies(), {
+      cookieName: "sotti-login",
+      password: process.env.COOKIE_PASSWORD!,
+    });
+    //@ts-ignore
+    session.id = user.id;
+    await session.save();
     // 리다이렉트
   }
 }
