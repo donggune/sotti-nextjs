@@ -73,5 +73,4 @@ export async function GET(request: NextRequest) {
     await session.save();
     return redirect("/profile");
   }
-  return Response.json(userProfileData);
 }
