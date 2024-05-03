@@ -13,12 +13,12 @@ export default function SocialLogin() {
           </span>
           <span>Github</span>
         </Link>
-        <Link className="primary-btn flex h-10 items-center justify-center gap-3" href="/sms">
+        {/* <Link className="primary-btn flex h-10 items-center justify-center gap-3" href="/sms">
           <span>
             <ChatBubbleOvalLeftEllipsisIcon className="h-6 w-6" />
           </span>
           <span>SMS</span>
-        </Link>
+        </Link> */}
       </div>
     </>
   );
