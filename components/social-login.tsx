@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { ImGithub } from "react-icons/im";
-import { GrGoogle } from "react-icons/gr";
 
 export default function SocialLogin() {
   return (
