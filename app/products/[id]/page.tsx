@@ -6,7 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FaUser } from "react-icons/fa";
 
-async function getIsOwner(userId: number) {
+async function getIsOwner(userId: string) {
   const session = await getSession();
   return session?.id === userId;
 }
