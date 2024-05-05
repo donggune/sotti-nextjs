@@ -4,7 +4,7 @@ export async function GET() {
     client_id: process.env.GOOGLE_CLIENT_ID!,
     scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
     response_type: "code",
-    redirect_uri: "http://localhost:3000/google/complete",
+    redirect_uri: process.env.GOOGLE_REDIRECT_URL!,
   };
 
   const formattedParams = new URLSearchParams(params).toString();
