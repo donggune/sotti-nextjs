@@ -8,3 +8,7 @@ export const PASSWORD_REGEX_ERROR = "비밀번호는 소문자, 대문자, 숫�
 
 export const SMS_TOKEN_ERROR = "올바른 인증번호를 입력해주세요";
 export const SMS_PHONE_ERROR = "올바른 핸드폰 번호를 입력해주세요";
+
+export const CONTENT_PER_PAGE = 1;
+export const MB = 1048576;
+export const PHOTO_URL = `https://${process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL}/${process.env.NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_HASH}`;

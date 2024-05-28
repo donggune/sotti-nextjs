@@ -6,11 +6,10 @@ const nextConfig = {
       따라서 next.config.mjs에서 hostname들을 등록해 주어야 한다.
       (nextConfig > images > remotePatterns > hostname)
 
-      images: {
-    
-        remotePatterns: [{ hostname: "" }],
-      },
-     */
+      */
+  images: {
+    remotePatterns: [{ hostname: "lh3.googleusercontent.com" }],
+  },
 };
 
 export default nextConfig;
