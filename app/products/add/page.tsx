@@ -4,13 +4,15 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import { useState } from "react";
 import { FaImage } from "react-icons/fa";
-import { uploadProduct } from "./actions";
+import { getUploadUrl, uploadProduct } from "./actions";
 import { MB } from "@/lib/constants";
 import { useFormState } from "react-dom";
 
 export default function AddProduct() {
   const [preview, setPreview] = useState("");
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const [uploadUrl, setUploadUrl] = useState("");
+  const [imageId, setImageId] = useState("");
+  const onImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { files },
     } = event;
@@ -38,9 +40,49 @@ export default function AddProduct() {
 
     const url = URL.createObjectURL(file);
     setPreview(url);
+
+    const { success, result } = await getUploadUrl();
+
+    console.log("result  :   ", result);
+
+    if (success) {
+      const { id, uploadURL } = result;
+      setUploadUrl(uploadURL);
+      setImageId(id);
+    }
   };
 
-  const [state, action] = useFormState(uploadProduct, null);
+  const interceptAction = async (_: any, formData: FormData) => {
+    const file = formData.get("photo");
+    if (!file) {
+      alert("사진을 추가해주세요.");
+      return;
+    }
+
+    const cloudflareForm = new FormData();
+    cloudflareForm.append("file", file);
+
+    console.log("uploadUrl :   ", uploadUrl);
+
+    const response = await fetch(uploadUrl, {
+      method: "POST",
+      body: cloudflareForm,
+    });
+
+    const result = await response.json();
+    console.log("result :   ", result);
+
+    if (response.status !== 200) {
+      alert("사진 업로드 실패");
+      return;
+    }
+
+    const imageUrl = `https://imagedelivery.net/WTRh1XaO40pcsKqk7IsZow/${imageId}`;
+    formData.set("photo", imageUrl);
+
+    return uploadProduct(_, formData);
+  };
+  const [state, action] = useFormState(interceptAction, null);
   return (
     <div>
       <form action={action} className="flex flex-col gap-4 p-5">

@@ -8,7 +8,7 @@ const nextConfig = {
 
       */
   images: {
-    remotePatterns: [{ hostname: "lh3.googleusercontent.com" }],
+    remotePatterns: [{ hostname: "lh3.googleusercontent.com" }, { hostname: "imagedelivery.net" }],
   },
 };
 

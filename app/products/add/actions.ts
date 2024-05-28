@@ -40,7 +40,7 @@ export async function uploadProduct(_: any, formData: FormData) {
     description: formData.get("description"),
   };
 
-  data.photo = "/banana.jpg";
+  console.log("data.photo :   ", data.photo);
 
   const result = productSchema.safeParse(data);
 
@@ -69,4 +69,19 @@ export async function uploadProduct(_: any, formData: FormData) {
       redirect(`/products/${product.id}`);
     }
   }
+}
+
+export async function getUploadUrl() {
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUD_FLARE_ID}/images/v2/direct_upload`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CLOUD_FLARE_TOKEN}`,
+      },
+    }
+  );
+
+  const data = await response.json();
+  return data;
 }
