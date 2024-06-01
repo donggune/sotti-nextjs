@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -66,6 +67,7 @@ export async function uploadProduct(_: any, formData: FormData) {
         },
       });
 
+      revalidatePath("/products");
       redirect(`/products/${product.id}`);
     }
   }
