@@ -63,7 +63,7 @@ export default async function ProductDetailPage({ params }: { params: { id: stri
         <h1 className="text-2xl font-semibold">{product.title}</h1>
         <p>{product.description}</p>
       </div>
-      <div className="fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex items-center justify-between">
+      <div className="fixed w-full bottom-0 p-5 pb-10 bg-neutral-800 flex items-center justify-between max-w-screen-sm">
         <span className="text-xl font-bold">{formatToWon(product.price)}</span>
         {isOwner ? (
           <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">Delete</button>
