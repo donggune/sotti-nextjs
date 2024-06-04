@@ -33,6 +33,9 @@ export const metadata = {
   title: "Products",
 };
 
+//export const dynamic = "force-dynamic"; // dynamic 를 사용하면 옵션에따라 캐싱을 적용하지 않음, force-dynamic 을 사용하면 캐싱을 적용하지 않음
+// export const revalidate = 60; // nextCache 와 같은 역할임
+
 export default async function ProductPage() {
   const initialProducts = await getCachedProducts();
 
