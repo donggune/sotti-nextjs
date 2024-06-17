@@ -1,3 +1,4 @@
+import LikeButton from "@/components/like-button";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { formatToTimeAgo } from "@/lib/utils";
@@ -39,9 +40,13 @@ async function getPost(id: number) {
   }
 }
 
-const getCachedPost = nextCache(getPost, ["post-detail"], {
-  tags: ["post-detail"],
-});
+async function getCachedPost(postId: number) {
+  const post = nextCache(getPost, [`post-detail-${postId}`], {
+    tags: [`post-detail-${postId}`],
+    revalidate: 180,
+  });
+  return post(postId);
+}
 
 async function getLikeStatus(postId: number, userId: string) {
   const isLiked = await db.like.findUnique({
@@ -82,36 +87,6 @@ export default async function PostDetail({ params }: { params: { id: string } })
     return notFound();
   }
 
-  const likePost = async () => {
-    "use server";
-    const session = await getSession();
-    try {
-      await db.like.create({
-        data: {
-          postId: id,
-          userId: session.id!,
-        },
-      });
-      revalidateTag(`like-status-${id}`);
-    } catch (e) {}
-  };
-
-  const disLikePost = async () => {
-    "use server";
-
-    const session = await getSession();
-    await db.like.delete({
-      where: {
-        id: {
-          postId: id,
-          userId: session.id!,
-        },
-      },
-    });
-    revalidateTag(`like-status-${id}`);
-  };
-
-  //const isLiked = await getLike(id);
   const { likeCount, isLiked } = await getCachedLikeStatus(id);
 
   return (
@@ -132,15 +107,8 @@ export default async function PostDetail({ params }: { params: { id: string } })
           <EyeIcon className="size-5" />
           <span>{post.views}</span>
         </div>
-        <form action={isLiked ? disLikePost : likePost}>
-          <button
-            className={`flex items-center gap-2 text-neutral-400 text-sm
-          ${isLiked ? "text-sotti-main" : ""}`}
-          >
-            {isLiked ? <HandThumbUpIconFilled className="size-5" /> : <HandThumbUpIcon className="size-5" />}
-            <span>{likeCount}</span>
-          </button>
-        </form>
+
+        <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
       </div>
     </div>
   );
