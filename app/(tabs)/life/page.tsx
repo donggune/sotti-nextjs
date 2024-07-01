@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { formatToTimeAgo } from "@/lib/utils";
+import { formatToTimeAgo } from "@/lib/common-utils";
 import { ChatBubbleOvalLeftIcon, HandRaisedIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
