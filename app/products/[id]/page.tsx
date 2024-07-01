@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { formatToWon } from "@/lib/utils";
+import { formatToWon } from "@/lib/common-utils";
 import { unstable_cache as nextCache } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
