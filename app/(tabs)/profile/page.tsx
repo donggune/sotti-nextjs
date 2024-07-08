@@ -40,7 +40,6 @@ export default async function ProfilePage() {
       <Card className="w-[400px]">
         <CardHeader className="text-center">
           <Avatar className="w-24 h-24 mx-auto mb-4">
-            <AvatarImage src={user.image || ""} alt={user.name} />
             <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
           <CardTitle className="text-2xl font-bold">{user.name} 님의 프로필</CardTitle>
@@ -50,10 +49,6 @@ export default async function ProfilePage() {
             <p className="text-sm font-medium text-gray-500">이메일</p>
             <p>{user.email}</p>
           </div>
-          <div>
-            <p className="text-sm font-medium text-gray-500">가입일</p>
-            <p>{new Date(user.createdAt).toLocaleDateString()}</p>
-          </div>
           <Separator />
           <div>
             <h3 className="text-lg font-semibold mb-2">내가 등록한 상품</h3>
@@ -61,7 +56,7 @@ export default async function ProfilePage() {
               <ul className="space-y-2">
                 {user.products.map((product) => (
                   <li key={product.id} className="flex justify-between items-center">
-                    <span>{product.name}</span>
+                    <span>{product.title}</span>
                     <span className="text-sm text-gray-500">{product.price}원</span>
                   </li>
                 ))}
